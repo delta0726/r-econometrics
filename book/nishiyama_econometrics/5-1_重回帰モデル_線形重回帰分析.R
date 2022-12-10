@@ -63,7 +63,8 @@ model_1 <- lm(growthrate8099 ~ trust80, data = df)
 model_2 <- lm(growthrate8099 ~ trust80 + education80 + lny80, data = df)
 
 # モデル比較
-list(model_1 = model_1, model_2 = model_2) %>% modelsummary()
+list(model_1 = model_1, model_2 = model_2) %>%
+  modelsummary(statistic = "({statistic}){stars}")
 
 
 # 2 説明変数を変更 -------------------------------------------------
@@ -85,4 +86,5 @@ model_2 <- lm(growthrate8099 ~ trust80 + education80 + lny80, data = df)
 model_3 <- lm(growthrate8099 ~ norm80 + education80 + lny80, data = df)
 
 # モデル比較
-list(model_2 = model_2, model_3 = model_3) %>% modelsummary()
+list(model_2 = model_2, model_3 = model_3) %>%
+  modelsummary(statistic = "({statistic}){stars}")

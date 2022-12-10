@@ -68,7 +68,8 @@ result_rob %>% glance()
 result_rob %>% tidy()
 
 # 結果比較
-list(result = result, result_rob = result_rob) %>% modelsummary()
+list(result = result, result_rob = result_rob) %>%
+  modelsummary(statistic = "({statistic}){stars}")
 
 
 # 3 回帰係数のt検定 -----------------------------------------------------
