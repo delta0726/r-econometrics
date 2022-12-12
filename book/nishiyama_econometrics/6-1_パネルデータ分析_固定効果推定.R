@@ -24,7 +24,7 @@ library(gridExtra)
 
 
 # データロード
-df <- read_csv("csv/yamaguchi_2.csv", locale = locale(encoding = "Shift_JIS"))
+df <- read_csv("csv/yamaguchi_2.csv")
 
 # データ準備
 df <- df %>% filter(year > 1995 & hh.type == "all")
