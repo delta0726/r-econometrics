@@ -36,7 +36,7 @@ df %>% glimpse()
 # モデル用のデータ
 df_model <-
   df %>%
-    select(f_rw, f_prot, kmwittenberg, f_young, f_jew, f_fem, f_ortsgeb, f_pruss,
+    select(f_rw, f_prot, kmwittenberg, lnpop, f_young, f_jew, f_fem, f_ortsgeb, f_pruss,
            hhsize, lnpop, gpop, f_blind, f_deaf, f_dumb, f_miss)
 
 # データ確認
@@ -44,14 +44,32 @@ df_model %>% print()
 df_model %>% glimpse()
 
 
-# 2 操作変数法によるモデルの構築------------------------------------------------
+# 2 モデル1 ------------------------------------------------
 
 # モデル構築
-iv2 <- iv_robust(f_rw ~  f_prot + f_young + f_jew + f_fem + f_ortsgeb +
+iv1 <- iv_robust(f_rw ~  f_prot + f_young + f_jew + f_fem + f_ortsgeb +
                  f_pruss + hhsize + lnpop + gpop + f_blind + f_deaf + f_dumb + f_miss |
 
                  kmwittenberg + f_young + f_jew + f_fem + f_ortsgeb +
                  f_pruss + hhsize + lnpop + gpop + f_blind + f_deaf + f_dumb + f_miss,
+                 data = df_model, se_type = "stata")
+
+# 結果確認
+iv1 %>% print()
+iv1 %>% summary()
+
+# 標準誤差
+iv1 %>% tidy()
+
+
+# 2 モデル2 ------------------------------------------------
+
+iv2 <- iv_robust(f_rw ~  f_prot + f_young + f_jew + f_fem + f_ortsgeb +
+                 f_pruss + hhsize + lnpop + gpop + f_blind + f_deaf + f_dumb + f_miss |
+
+                   kmwittenberg + kmwittenberg:lnpop + kmwittenberg:gpop +
+                   f_young + f_jew + f_fem + f_ortsgeb +
+                   f_pruss + hhsize + lnpop + gpop + f_blind + f_deaf + f_dumb + f_miss,
                  data = df_model, se_type = "stata")
 
 # 結果確認
