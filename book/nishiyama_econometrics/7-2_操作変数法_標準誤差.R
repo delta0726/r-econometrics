@@ -44,7 +44,7 @@ df_model %>% glimpse()
 # 2 操作変数法によるモデルの構築------------------------------------------------
 
 # モデル構築
-iv1 <- iv_robust(f_rw ~ f_prot | kmwittenberg, data = mydata, se_type = "stata")
+iv1 <- iv_robust(f_rw ~ f_prot | kmwittenberg, data = df_model, se_type = "stata")
 
 # 結果確認
 iv1 %>% print()
