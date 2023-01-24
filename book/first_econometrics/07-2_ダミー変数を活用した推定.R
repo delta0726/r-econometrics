@@ -10,6 +10,7 @@
 
 # ＜概要＞
 # - ダミー変数をモデルに追加することで、グループによる効果の違いを測定することができる
+#   --- 政策効果がグループ間で異なるかどうかを調べる際に使う（グループごとに切片がシフトする）
 
 
 # ＜目次＞
@@ -23,6 +24,7 @@
 # ライブラリ
 library(tidyverse)
 library(broom)
+library(psych)
 library(modelsummary)
 
 
@@ -59,9 +61,17 @@ df %>% filter(female == 1) %>% select(female, yeduc, female_yeduc)
 #   --- 女性の教育収益率は11.4%(+0.024+0.09)
 
 
+# データ確認
+df %>%
+  select(lincome, yeduc, female, female_yeduc) %>%
+  pairs.panels()
+
 # モデル構築
 reg1 <- lm(lincome ~ yeduc + female + female_yeduc, data = df)
 
 # 結果確認
+reg1 %>% glance()
 reg1 %>% tidy()
+
+# サマリー出力
 list(reg1 = reg1) %>% modelsummary(statistic = "({statistic}){stars}")
