@@ -2,7 +2,7 @@
 # Title   : 計量経済学の第一歩
 # Chapter : 9 パネルデータ分析
 # Theme   : 例9.3：平均差分法
-# Date    : 2022/12/03
+# Date    : 2023/1/26
 # Page    : P229 - P232
 # URL     : http://www.yuhikaku.co.jp/static/studia_ws/index.html#isbn_9784641150287
 # ***********************************************************************************************
@@ -17,8 +17,9 @@
 # ＜目次＞
 # 0 準備
 # 1 パネルデータの確認
-# 2 固定効果モデルの構築
-# 3 モデル評価
+# 2 プール回帰モデルの構築
+# 3 固定効果モデルの構築
+# 4 固定効果の抽出
 
 
 # 0 準備 ---------------------------------------------------------------
@@ -66,7 +67,28 @@ df %>%
          diff = shock_y2 - shock_y2_calc)
 
 
-# 2 固定効果モデルの構築 --------------------------------------------------------
+# 2 プール回帰モデルの構築 --------------------------------------------------------
+
+# ＜ポイント＞
+# - plmのプール回帰がOLS回帰と同じ結果となることを確認する
+
+
+# モデル構築
+# --- 線形回帰モデル
+# --- プール回帰モデル
+reg1 <- lm(life ~ shock + y2 + shock_y2 + income, data = df)
+preg1 <- plm(life ~ shock + y2 + shock_y2 + income, data = df, effect ="individual",
+             model = "pooling", index = c("id", "t"))
+
+# 結果確認
+preg1 %>% print()
+preg1 %>% print()
+
+# モデルサマリー
+list(reg1 = reg1, preg1 = preg1) %>% modelsummary(statistic = "({statistic}){stars}")
+
+
+# 3 固定効果モデルの構築 --------------------------------------------------------
 
 # ＜ポイント＞
 # - 固定効果モデル(within)を用いた回帰
@@ -74,21 +96,22 @@ df %>%
 
 
 # モデル構築
-preg1 <- plm(life ~ shock + y2 + shock_y2 + income, data = df, effect ="individual",
+preg2 <- plm(life ~ shock + y2 + shock_y2 + income, data = df, effect ="individual",
              model = "within", index = c("id", "t"))
 
 # 結果確認
-preg1 %>% print()
-
-
-# 3 モデル評価 -------------------------------------------------------------
-
-# ＜ポイント＞
-# - ｢shock｣という変数は時間を通じて変化しないため、個別効果とともに取り除かれた
-# - shock_y2はマイナス0.14で統計的に有意（例2のshockと同じ値）
+preg2 %>% print()
 
 # モデルサマリー
-list(preg1 = preg1) %>% modelsummary(statistic = "({statistic}){stars}")
+# - ｢shock｣という変数は時間を通じて変化しないため、個別効果とともに取り除かれた
+# - shock_y2はマイナス0.14で統計的に有意（例2のshockと同じ値）
+list(preg1 = preg1, preg2 = preg2) %>% modelsummary(statistic = "({statistic}){stars}")
+
+
+# 4 固定効果の抽出 -------------------------------------------------------------
+
+# ＜ポイント＞
+
 
 # n人分の切片平均値出力
-preg1 %>% fixef() %>% mean()
+preg2 %>% fixef() %>% mean()
