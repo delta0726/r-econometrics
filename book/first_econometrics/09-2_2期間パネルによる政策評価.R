@@ -110,8 +110,8 @@ df_s2 <- subset(df, t == 2)
 df_ds <- df_s2 - df_s1
 
 #差分を取ったデータを使って最小2乗法で回帰
-reg2 <- lm(life ~ shock_y2 + income, data = df_ds)
+replicate <- lm(life ~ shock_y2 + income, data = df_ds)
 
 # 結果確認
-list(reg1 = reg1, preg1 = preg1, reg2 = reg2) %>%
+list(preg1 = preg1, replicate = replicate) %>%
   modelsummary(statistic = "({statistic}){stars}")
